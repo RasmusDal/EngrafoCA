@@ -13,6 +13,8 @@ namespace Infrastructure.Interceptors
         {
             _publisher = publisher;
         }
+
+		// Automatically publishes domain events upon calling the saveChangesAsync method
         public async override ValueTask<InterceptionResult<int>> SavingChangesAsync(DbContextEventData eventData, InterceptionResult<int> result, CancellationToken cancellationToken = default)
 		{
 			await PublishDomainEvents(eventData.Context);

@@ -1,14 +1,23 @@
 using Application;
 using Infrastructure;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
+using Serilog;
+using WebUI.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+//! Add services to the container.
 builder.Services
 	.AddApplication()
 	.AddInfrastructure(builder.Configuration);
 
+//! Logging
+Log.Logger = new LoggerConfiguration()
+	.ReadFrom.Configuration(builder.Configuration).CreateLogger();
+
+builder.Services.AddSerilog();
+
+//! API
 builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
@@ -21,6 +30,10 @@ if (!app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseMiddleware<RequestLogContextMiddleware>();
+app.UseSerilogRequestLogging();
+
 app.UseStaticFiles();
 
 app.UseRouting();

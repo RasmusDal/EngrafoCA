@@ -1,0 +1,25 @@
+version: '3.8'
+
+services:
+  # MSSQL service
+  db:
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    container_name: sql_server
+    environment:
+      SA_PASSWORD: "YourStrong!Passw0rd"  # Set a strong password for SA user
+      ACCEPT_EULA: "Y"  # Accept the end-user license agreement
+    ports:
+      - "1433:1433"  # Map container port to host port
+
+  # .NET application service
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: dotnet_app
+    ports:
+      - "8080:80"  # Map container port to host port
+    depends_on:
+      - db  # Specify that this service depends on the db service
+    environment:
+      ConnectionStrings__DefaultConnection: "Server=db;Database=YourDatabaseName;User=sa;Password=YourStrong!Passw0rd"  # Connection string to connect to MSSQL

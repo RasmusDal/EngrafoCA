@@ -1,7 +1,6 @@
 using Application;
 using Infrastructure;
 using Infrastructure.Data;
-using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);

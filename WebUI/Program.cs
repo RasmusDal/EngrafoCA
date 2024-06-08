@@ -1,8 +1,6 @@
 using Application;
 using Infrastructure;
 using Infrastructure.Data;
-using Serilog;
-using WebUI.Middleware;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -11,12 +9,6 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services
 	.AddApplication()
 	.AddInfrastructure(builder.Configuration);
-
-//! Logging
-Log.Logger = new LoggerConfiguration()
-	.ReadFrom.Configuration(builder.Configuration).CreateLogger();
-
-builder.Services.AddSerilog();
 
 //! API
 builder.Services.AddControllersWithViews();
@@ -30,22 +22,7 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
-using (var scope = app.Services.CreateScope())
-{
-	var provider = scope.ServiceProvider;
-
-	var context = provider.GetRequiredService<ApplicationDbContext>();
-
-	if (context.Database.GetMigrations().Any())
-	{
-		context.Database.Migrate();
-	}
-}
-
 app.UseHttpsRedirection();
-
-app.UseMiddleware<RequestLogContextMiddleware>();
-app.UseSerilogRequestLogging();
 
 app.UseStaticFiles();
 

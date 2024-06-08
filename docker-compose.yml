@@ -2,24 +2,25 @@ version: '3.8'
 
 services:
   # MSSQL service
-  db:
+  mssql:
     image: mcr.microsoft.com/mssql/server:2019-latest
-    container_name: sql_server
+    container_name: mssql
+    hostname: "mssql"
     environment:
-      SA_PASSWORD: "YourStrong!Passw0rd"  # Set a strong password for SA user
+      MSSQL_SA_PASSWORD: "Admin123&"
       ACCEPT_EULA: "Y"  # Accept the end-user license agreement
     ports:
-      - "1433:1433"  # Map container port to host port
+      - "1434:1433" 
 
-  # .NET application service
-  web:
+  # EngrafoCA Web App
+  engrafoca:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: dotnet_app
+    container_name: engrafoca
     ports:
-      - "8080:80"  # Map container port to host port
+      - "8081:81"
     depends_on:
-      - db  # Specify that this service depends on the db service
+      - mssql
     environment:
-      ConnectionStrings__DefaultConnection: "Server=db;Database=YourDatabaseName;User=sa;Password=YourStrong!Passw0rd"  # Connection string to connect to MSSQL
+      ASPNETCORE_ENVIRONMENT: "Development"

@@ -1,9 +1,16 @@
+using Application;
+using Infrastructure;
 using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
 using WebUI.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
+
+
+builder.Services
+	.AddApplication()
+	.AddInfrastructure(builder.Configuration);
 
 //! Logging
 Log.Logger = new LoggerConfiguration()

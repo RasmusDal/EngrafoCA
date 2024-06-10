@@ -47,11 +47,16 @@ namespace Application.Common.Behaviors
 			
 			if (response.IsError)
 			{
+				var errorName = response.Errors.First().Code;
+
 				using (LogContext.PushProperty("Error", response.Errors.First(), true))
-					_logger.LogError("Completed Request: {requestName} with error", requestName);
+					_logger.LogError("Completed Request: {requestName}, with error: {errorName}", requestName, errorName);
 			}
 
-			_logger.LogInformation("Completed Request: {requestName}", requestName);
+			if (!response.IsError)
+			{
+				_logger.LogInformation("Completed Request: {requestName}", requestName);
+			}			
 
 			// This invokes the handler
 			return response;

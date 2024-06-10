@@ -13,10 +13,8 @@ builder.Services
 	.AddInfrastructure(builder.Configuration);
 
 //! Logging
-Log.Logger = new LoggerConfiguration()
-	.ReadFrom.Configuration(builder.Configuration).CreateLogger();
-
-builder.Services.AddSerilog();
+builder.Host.UseSerilog((context, configuration) =>
+	configuration.ReadFrom.Configuration(context.Configuration));
 
 //! API
 builder.Services.AddControllersWithViews();

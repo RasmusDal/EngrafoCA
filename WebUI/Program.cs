@@ -11,9 +11,10 @@ builder.Services
 	.AddApplication()
 	.AddInfrastructure(builder.Configuration);
 
+
 //! Logging
-Log.Logger = new LoggerConfiguration()
-	.ReadFrom.Configuration(builder.Configuration).CreateLogger();
+builder.Host.UseSerilog((context, configuration) =>
+	configuration.ReadFrom.Configuration(context.Configuration));
 
 builder.Services.AddSerilog();
 

@@ -10,8 +10,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Application.Features.Documentations.Commands.CreateDocumentation
 {
-	//! Implement mapping from command to entity
-	//? Maybe create a DTO instead of direct properties in Command
+	
 	public record CreateDocumentationCommand : IRequest<ErrorOr<Guid>>
 	{
 		public string Name { get; init; }
@@ -26,12 +25,10 @@ namespace Application.Features.Documentations.Commands.CreateDocumentation
 	public class CreateDocumentationCommandHandler : IRequestHandler<CreateDocumentationCommand, ErrorOr<Guid>>
 	{
 		private readonly IApplicationDbContext _context;
-		private readonly ILogger<CreateDocumentationCommandHandler> _logger;
 
-		public CreateDocumentationCommandHandler(IApplicationDbContext context, ILogger<CreateDocumentationCommandHandler> logger)
+		public CreateDocumentationCommandHandler(IApplicationDbContext context)
 		{
 			_context = context;
-			_logger = logger;
 		}
 
 		public async Task<ErrorOr<Guid>> Handle(CreateDocumentationCommand request, CancellationToken cancellationToken)

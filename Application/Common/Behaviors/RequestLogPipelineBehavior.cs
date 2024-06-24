@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using ErrorOr;
 using FluentValidation;
+using FluentValidation.Validators;
 using MediatR;
 using Microsoft.Extensions.Logging;
 using Serilog.Context;
@@ -25,7 +26,7 @@ namespace Application.Common.Behaviors
 
 		public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
 		{
-						if (_logger is null)
+			if (_logger is null)
 			{
 				return await next();
 			}
@@ -41,10 +42,11 @@ namespace Application.Common.Behaviors
 			{
 				using (LogContext.PushProperty("Error", response.Errors.First(), true))
 					_logger.LogError("Completed Request: {requestName} with error", requestName);
-			}
-
-			_logger.LogInformation("Completed Request: {requestName}", requestName);
-
+			} else
+			{
+				_logger.LogInformation("Completed Request: {requestName}", requestName);
+			}		
+			
 			// This invokes the handler
 			return response;
 		}
